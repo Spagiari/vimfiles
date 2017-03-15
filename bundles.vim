@@ -17,4 +17,6 @@ Bundle 'nanotech/jellybeans.vim'
 
 " Lean & mean status/tabline for vim that's light as air
 Bundle 'bling/vim-airline'
+Bundle 'bling/vim-airline-themes'
 
+Bundle 'Valloric/YouCompleteMe'
