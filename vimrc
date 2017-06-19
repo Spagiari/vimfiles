@@ -25,14 +25,34 @@ set fileencoding=utf-8
 set autoread
 
 " Enable syntax highlighting
-syntax on
+" syntax on
 
 " No sound, no blink on errros
 set noerrorbells
 set novisualbell
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+"set rtp+=~/.vim/bundle/vundle/
+"call vundle#rc()
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+"alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'jnurmine/Zenburn'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+call vundle#end()            " required
 
 let file = expand("~/.vim/bundles.vim")
 if filereadable(file)
@@ -72,7 +92,11 @@ autocmd BufWinLeave * call clearmatches()
 " NERDTree
 " Close Vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-noremap <C-Left> :NERDTreeToggle<CR>
+noremap <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
 
 " Airlines
 let g:airline_powerline_fonts = 1
@@ -87,3 +111,54 @@ autocmd BufWritePost .vimrc source %
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
+
+"YcmCompleter
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+"split screen
+set splitbelow
+set splitright
+
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+let g:SimpylFold_docstring_preview=1
+
+" Enable folding with the spacebar
+nnoremap <space> za
+
+"Python indentation
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix
+
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2
+
+"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+set encoding=utf-8
+
+let python_highlight_all=1
+syntax on
+
+
+set nu
+
+"python with virtualenv support
+py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
